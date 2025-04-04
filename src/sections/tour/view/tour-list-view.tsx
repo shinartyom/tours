@@ -48,7 +48,7 @@ export function TourListView() {
   });
 
   const dateError = fIsAfter(filters.state.startDate, filters.state.endDate);
-
+  console.log(_tours);
   const dataFiltered = applyFilter({
     inputData: _tours,
     filters: filters.state,

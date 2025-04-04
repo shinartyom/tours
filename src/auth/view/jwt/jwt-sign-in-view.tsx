@@ -25,9 +25,9 @@ import { signInWithPassword } from '../../context/jwt';
 
 // ----------------------------------------------------------------------
 
-export type SignInSchemaType = zod.infer<typeof SignInSchema>;
+type SignInSchemaType = zod.infer<typeof SignInSchema>;
 
-export const SignInSchema = zod.object({
+const SignInSchema = zod.object({
   email: zod
     .string()
     .min(1, { message: 'Email is required!' })
@@ -50,13 +50,16 @@ export function JwtSignInView() {
   const password = useBoolean();
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: '@demo1',
+    email: 'demo@tours.uz',
+    password: 'demo@tours.uz',
   };
 
   const methods = useForm<SignInSchemaType>({
     resolver: zodResolver(SignInSchema),
-    defaultValues,
+    defaultValues: {
+      email: '',
+      password: '',
+    },
   });
 
   const {
