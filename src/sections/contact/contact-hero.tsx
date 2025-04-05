@@ -1,33 +1,16 @@
 import type { BoxProps } from '@mui/material/Box';
 
-import { m } from 'framer-motion';
-
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { useTheme } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
+import { Stack, IconButton } from '@mui/material';
 
+import { _socials } from 'src/_mock';
 import { CONFIG } from 'src/config-global';
 import { varAlpha, bgGradient } from 'src/theme/styles';
+import { TwitterIcon, FacebookIcon, LinkedinIcon, InstagramIcon } from 'src/assets/icons';
 
 import { varFade, AnimateText, MotionContainer, animateTextClasses } from 'src/components/animate';
-
-// ----------------------------------------------------------------------
-
-const CONTACTS = [
-  { country: 'Bali', address: '508 Bridle Avenue Newnan, GA 30263', phoneNumber: '(239) 555-0108' },
-  {
-    country: 'London',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(319) 555-0115',
-  },
-  {
-    country: 'Prague',
-    address: '508 Bridle Avenue Newnan, GA 30263',
-    phoneNumber: '(252) 555-0126',
-  },
-  { country: 'Moscow', address: '508 Bridle', phoneNumber: '(307) 555-0133' },
-];
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +25,7 @@ export function ContactHero({ sx, ...other }: BoxProps) {
           color: `0deg, ${varAlpha(theme.vars.palette.grey['900Channel'], 0.8)}, ${varAlpha(theme.vars.palette.grey['900Channel'], 0.8)}`,
           imgUrl: `${CONFIG.assetsDir}/assets/images/contact/hero.webp`,
         }),
-        height: { md: 560 },
+        height: { md: 360 },
         py: { xs: 10, md: 0 },
         overflow: 'hidden',
         position: 'relative',
@@ -53,7 +36,7 @@ export function ContactHero({ sx, ...other }: BoxProps) {
       <Container component={MotionContainer}>
         <Box
           sx={{
-            bottom: { md: 80 },
+            bottom: { md: 40 },
             position: { md: 'absolute' },
             textAlign: { xs: 'center', md: 'unset' },
           }}
@@ -61,7 +44,7 @@ export function ContactHero({ sx, ...other }: BoxProps) {
           <AnimateText
             component="h1"
             variant="h1"
-            text={['Where', 'to find us?']}
+            text={['Contact', 'us conveniently']}
             variants={varFade({ distance: 24 }).inUp}
             sx={{
               color: 'common.white',
@@ -71,29 +54,28 @@ export function ContactHero({ sx, ...other }: BoxProps) {
             }}
           />
 
-          <Box
-            columnGap={{ xs: 2, md: 5 }}
-            rowGap={{ xs: 5, md: 0 }}
-            display={{ xs: 'grid', md: 'flex' }}
-            gridTemplateColumns={{ xs: 'repeat(2, 1fr)' }}
-            sx={{ mt: 5, color: 'common.white' }}
+          <Stack
+            direction="row"
+            sx={{
+              mt: 2,
+            }}
+            gap={4}
           >
-            {CONTACTS.map((contact) => (
-              <Box key={contact.country}>
-                <m.div variants={varFade({ distance: 24 }).inUp}>
-                  <Typography variant="h6" sx={{ mb: 1 }}>
-                    {contact.country}
-                  </Typography>
-                </m.div>
-
-                <m.div variants={varFade({ distance: 24 }).inUp}>
-                  <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                    {contact.address}
-                  </Typography>
-                </m.div>
-              </Box>
+            {_socials.map((social) => (
+              <IconButton
+                key={social.label}
+                size="large"
+                sx={{ width: 60, height: 60 }}
+                color="inherit"
+                onClick={() => window.open(social.path, '_blank')}
+              >
+                {social.value === 'twitter' && <TwitterIcon sx={{ width: 35, height: 35 }} />}
+                {social.value === 'facebook' && <FacebookIcon sx={{ width: 35, height: 35 }} />}
+                {social.value === 'instagram' && <InstagramIcon sx={{ width: 35, height: 35 }} />}
+                {social.value === 'linkedin' && <LinkedinIcon sx={{ width: 35, height: 35 }} />}
+              </IconButton>
             ))}
-          </Box>
+          </Stack>
         </Box>
       </Container>
     </Box>

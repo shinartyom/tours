@@ -17,6 +17,13 @@ export type ITourGuide = {
   phoneNumber: string;
 };
 
+export type TourGuide = {
+  _id: string;
+  name: string;
+  avatarUrl: string;
+  phoneNumber: string;
+};
+
 export type ITourBooker = {
   id: string;
   name: string;

@@ -102,8 +102,16 @@ export const _notifications = [...Array(9)].map((_, index) => ({
 // ----------------------------------------------------------------------
 
 export const _mapContact = [
-  { latlng: [33, 65], address: _mock.fullAddress(1), phoneNumber: _mock.phoneNumber(1) },
-  { latlng: [-12.5, 18.5], address: _mock.fullAddress(2), phoneNumber: _mock.phoneNumber(2) },
+  {
+    latlng: [41.32206841099989, 69.22217531202367],
+    address: 'Tashkent city, 56 Buyuk Turon Street (side of the Lotte Hotel), 100029, Uzbekistan',
+    phoneNumber: '+998 71 200 00 00',
+  },
+  {
+    latlng: [41.309388337007576, 69.26816849370118],
+    address: '13Ts4 Alisher Navoi Street, Office 8',
+    phoneNumber: '+998 71 200 00 01',
+  },
 ];
 
 // ----------------------------------------------------------------------
@@ -112,22 +120,22 @@ export const _socials = [
   {
     value: 'facebook',
     label: 'Facebook',
-    path: 'https://www.facebook.com/caitlyn.kerluke',
+    path: 'https://www.facebook.com',
   },
   {
     value: 'instagram',
     label: 'Instagram',
-    path: 'https://www.instagram.com/caitlyn.kerluke',
+    path: 'https://www.instagram.com',
   },
   {
     value: 'linkedin',
     label: 'Linkedin',
-    path: 'https://www.linkedin.com/caitlyn.kerluke',
+    path: 'https://www.linkedin.com',
   },
   {
     value: 'twitter',
     label: 'Twitter',
-    path: 'https://www.twitter.com/caitlyn.kerluke',
+    path: 'https://x.com',
   },
 ];
 

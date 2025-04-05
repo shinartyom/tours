@@ -245,6 +245,11 @@ export const navData = [
       //       info: <Iconify width={18} icon="prime:external-link" />,
       //     },
       //     { title: 'Blank', path: paths.dashboard.blank, icon: ICONS.blank },
+      {
+        title: 'Contact Us',
+        path: '/contact-us',
+        icon: ICONS.chat,
+      },
     ],
   },
 ];

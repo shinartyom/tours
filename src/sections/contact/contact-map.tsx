@@ -37,8 +37,12 @@ export function ContactMap({ contacts, sx, ...other }: ContactMapProps) {
       {...other}
     >
       <Map
-        initialViewState={{ latitude: 12, longitude: 42, zoom: 2 }}
         mapStyle={`mapbox://styles/mapbox/${theme.palette.mode === 'light' ? 'light' : 'dark'}-v10`}
+        initialViewState={{
+          latitude: 41.2995,
+          longitude: 69.2401,
+          zoom: 12,
+        }}
       >
         <MapControl hideGeolocate />
 

@@ -15,6 +15,7 @@ const TourDetailsPage = lazy(() => import('src/pages/dashboard/tour/details'));
 const TourListPage = lazy(() => import('src/pages/dashboard/tour/list'));
 const TourCreatePage = lazy(() => import('src/pages/dashboard/tour/new'));
 const TourEditPage = lazy(() => import('src/pages/dashboard/tour/edit'));
+const ContactPage = lazy(() => import('src/pages/contact-us'));
 
 // ----------------------------------------------------------------------
 
@@ -37,5 +38,9 @@ export const tourRoutes = [
       { path: 'new', element: <TourCreatePage /> },
       { path: ':id/edit', element: <TourEditPage /> },
     ],
+  },
+  {
+    path: 'contact-us',
+    element: <ContactPage />,
   },
 ];

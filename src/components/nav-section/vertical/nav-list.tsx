@@ -35,7 +35,7 @@ export function NavList({ data, render, depth, slotProps, enabledRootRedirect }:
   const handleCloseMenu = useCallback(() => {
     setOpenMenu(false);
   }, []);
-  console.log(data);
+
   const renderNavItem = (
     <NavItem
       render={render}

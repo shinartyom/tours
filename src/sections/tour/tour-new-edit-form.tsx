@@ -1,9 +1,9 @@
-import type { ITourItem, ITourGuide } from 'src/types/tour';
+import type { ITourItem, TourGuide } from 'src/types/tour';
 
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 
 import Chip from '@mui/material/Chip';
 import Card from '@mui/material/Card';
@@ -19,9 +19,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
+import axiosInstance from 'src/utils/axios';
 import { fIsAfter } from 'src/utils/format-time';
 
-import { _tags, _tourGuides, TOUR_SERVICE_OPTIONS } from 'src/_mock';
+import { CONFIG } from 'src/config-global';
+import { _tags, TOUR_SERVICE_OPTIONS } from 'src/_mock';
 
 import { toast } from 'src/components/snackbar';
 import { Form, Field, schemaHelper } from 'src/components/hook-form';
@@ -69,6 +71,22 @@ type Props = {
 
 export function TourNewEditForm({ currentTour }: Props) {
   const router = useRouter();
+
+  const [tourGuides, setTourGuides] = useState<TourGuide[]>([]);
+
+  useEffect(() => {
+    axiosInstance
+      .get('/api/tour-guides')
+      .then((response) => {
+        const { data } = response;
+        if (data) {
+          setTourGuides(data);
+        }
+      })
+      .catch((error) => {
+        toast.error('Error fetching tour guides:', error);
+      });
+  }, []);
 
   const defaultValues = useMemo(
     () => ({
@@ -188,15 +206,15 @@ export function TourNewEditForm({ currentTour }: Props) {
             name="tourGuides"
             placeholder="+ Tour Guides"
             disableCloseOnSelect
-            options={_tourGuides}
-            getOptionLabel={(option) => (option as ITourGuide).name}
-            isOptionEqualToValue={(option, value) => option.id === value.id}
+            options={tourGuides}
+            getOptionLabel={(option) => (option as TourGuide).name}
+            isOptionEqualToValue={(option, value) => option._id === value._id}
             renderOption={(props, tourGuide) => (
-              <li {...props} key={tourGuide.id}>
+              <li {...props} key={tourGuide._id}>
                 <Avatar
-                  key={tourGuide.id}
+                  key={tourGuide._id}
                   alt={tourGuide.avatarUrl}
-                  src={tourGuide.avatarUrl}
+                  src={`${CONFIG.serverUrl}/api${tourGuide.avatarUrl}`}
                   sx={{ mr: 1, width: 24, height: 24, flexShrink: 0 }}
                 />
 
@@ -207,11 +225,16 @@ export function TourNewEditForm({ currentTour }: Props) {
               selected.map((tourGuide, index) => (
                 <Chip
                   {...getTagProps({ index })}
-                  key={tourGuide.id}
+                  key={tourGuide._id}
                   size="small"
                   variant="soft"
                   label={tourGuide.name}
-                  avatar={<Avatar alt={tourGuide.name} src={tourGuide.avatarUrl} />}
+                  avatar={
+                    <Avatar
+                      alt={tourGuide.name}
+                      src={`${CONFIG.serverUrl}/api${tourGuide.avatarUrl}`}
+                    />
+                  }
                 />
               ))
             }
