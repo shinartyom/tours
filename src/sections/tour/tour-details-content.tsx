@@ -1,4 +1,4 @@
-import type { ITourItem } from 'src/types/tour';
+import type { TourItem } from 'src/types/tour';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -11,6 +11,7 @@ import ListItemText from '@mui/material/ListItemText';
 
 import { fDate } from 'src/utils/format-time';
 
+import { CONFIG } from 'src/config-global';
 import { TOUR_SERVICE_OPTIONS } from 'src/_mock';
 
 import { Image } from 'src/components/image';
@@ -21,11 +22,11 @@ import { Lightbox, useLightBox } from 'src/components/lightbox';
 // ----------------------------------------------------------------------
 
 type Props = {
-  tour?: ITourItem;
+  tour?: TourItem;
 };
 
 export function TourDetailsContent({ tour }: Props) {
-  const slides = tour?.images.map((slide) => ({ src: slide })) || [];
+  const slides = tour?.images.map((slide) => ({ src: `${CONFIG.serverUrl}/api${slide}` })) || [];
 
   const {
     selected: selectedImage,
@@ -107,7 +108,7 @@ export function TourDetailsContent({ tour }: Props) {
         <Stack direction="row" alignItems="center" spacing={0.5} sx={{ typography: 'body2' }}>
           <Iconify icon="eva:star-fill" sx={{ color: 'warning.main' }} />
           <Box component="span" sx={{ typography: 'subtitle2' }}>
-            {tour?.ratingNumber}
+            {tour?.rating}
           </Box>
           <Link sx={{ color: 'text.secondary' }}>(234 reviews)</Link>
         </Stack>
