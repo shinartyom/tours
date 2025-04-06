@@ -1,4 +1,4 @@
-import type { ITourItem } from 'src/types/tour';
+import type { TourItem as TourItemInterface } from 'src/types/tour';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -15,6 +15,8 @@ import { RouterLink } from 'src/routes/components';
 import { fCurrency } from 'src/utils/format-number';
 import { fDateTime, fDateRangeShortLabel } from 'src/utils/format-time';
 
+import { CONFIG } from 'src/config-global';
+
 import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
@@ -22,7 +24,7 @@ import { usePopover, CustomPopover } from 'src/components/custom-popover';
 // ----------------------------------------------------------------------
 
 type Props = {
-  tour: ITourItem;
+  tour: TourItemInterface;
   onView: () => void;
   onEdit: () => void;
   onDelete: () => void;
@@ -46,7 +48,7 @@ export function TourItem({ tour, onView, onEdit, onDelete }: Props) {
         bgcolor: 'warning.lighter',
       }}
     >
-      <Iconify icon="eva:star-fill" sx={{ color: 'warning.main', mr: 0.25 }} /> {tour.ratingNumber}
+      <Iconify icon="eva:star-fill" sx={{ color: 'warning.main', mr: 0.25 }} /> {tour.rating}
     </Stack>
   );
 
@@ -66,9 +68,9 @@ export function TourItem({ tour, onView, onEdit, onDelete }: Props) {
         typography: 'subtitle2',
       }}
     >
-      {!!tour.priceSale && (
+      {!!tour.salePrice && (
         <Box component="span" sx={{ color: 'grey.500', mr: 0.25, textDecoration: 'line-through' }}>
-          {fCurrency(tour.priceSale)}
+          {fCurrency(tour.salePrice)}
         </Box>
       )}
       {fCurrency(tour.price)}
@@ -82,7 +84,7 @@ export function TourItem({ tour, onView, onEdit, onDelete }: Props) {
         {renderRating}
         <Image
           alt={tour.images[0]}
-          src={tour.images[0]}
+          src={`${CONFIG.serverUrl}/api${tour.images[0]}`}
           sx={{ width: 1, height: 164, borderRadius: 1 }}
         />
       </Box>
@@ -90,13 +92,13 @@ export function TourItem({ tour, onView, onEdit, onDelete }: Props) {
       <Box gap={0.5} display="flex" flexDirection="column">
         <Image
           alt={tour.images[1]}
-          src={tour.images[1]}
+          src={`${CONFIG.serverUrl}/api${tour.images[1]}`}
           ratio="1/1"
           sx={{ borderRadius: 1, width: 80, height: 80 }}
         />
         <Image
           alt={tour.images[2]}
-          src={tour.images[2]}
+          src={`${CONFIG.serverUrl}/api${tour.images[2]}`}
           ratio="1/1"
           sx={{ borderRadius: 1, width: 80, height: 80 }}
         />
@@ -109,7 +111,7 @@ export function TourItem({ tour, onView, onEdit, onDelete }: Props) {
       sx={{ p: (theme) => theme.spacing(2.5, 2.5, 2, 2.5) }}
       primary={`Posted date: ${fDateTime(tour.createdAt)}`}
       secondary={
-        <Link component={RouterLink} href={paths.tour.details(tour.id)} color="inherit">
+        <Link component={RouterLink} href={paths.tour.details(tour._id)} color="inherit">
           {tour.name}
         </Link>
       }
@@ -141,10 +143,6 @@ export function TourItem({ tour, onView, onEdit, onDelete }: Props) {
         {
           icon: <Iconify icon="solar:clock-circle-bold" sx={{ color: 'info.main' }} />,
           label: fDateRangeShortLabel(tour.available.startDate, tour.available.endDate),
-        },
-        {
-          icon: <Iconify icon="solar:users-group-rounded-bold" sx={{ color: 'primary.main' }} />,
-          label: `${tour.bookers.length} Booked`,
         },
       ].map((item) => (
         <Stack

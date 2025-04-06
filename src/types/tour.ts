@@ -53,3 +53,24 @@ export type ITourItem = {
     endDate: IDateValue;
   };
 };
+
+export type TourItem = {
+  _id: string;
+  name: string;
+  content: string;
+  images: string[];
+  tourGuides: ITourGuide[];
+  available: {
+    startDate: IDateValue;
+    endDate: IDateValue;
+  };
+  durations: string;
+  destination: string;
+  services: string[];
+  tags: string[];
+  publish: boolean;
+  price: number;
+  salePrice: number;
+  rating: number;
+  createdAt: IDateValue;
+};

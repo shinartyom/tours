@@ -1,17 +1,21 @@
-import type { ITourItem, ITourFilters } from 'src/types/tour';
+import type { TourItem, ITourItem, ITourFilters } from 'src/types/tour';
 
-import { useState, useCallback } from 'react';
+import { toast } from 'sonner';
+import { useState, useEffect, useCallback } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import { TextField, InputAdornment } from '@mui/material';
 
 import { paths } from 'src/routes/paths';
 import { RouterLink } from 'src/routes/components';
 
 import { useBoolean } from 'src/hooks/use-boolean';
+import { useDebounce } from 'src/hooks/use-debounce';
 import { useSetState } from 'src/hooks/use-set-state';
 
 import { orderBy } from 'src/utils/helper';
+import axiosInstance from 'src/utils/axios';
 import { fIsAfter, fIsBetween } from 'src/utils/format-time';
 
 import { DashboardContent } from 'src/layouts/dashboard';
@@ -23,7 +27,6 @@ import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
 import { TourList } from '../tour-list';
 import { TourSort } from '../tour-sort';
-import { TourSearch } from '../tour-search';
 import { TourFilters } from '../tour-filters';
 import { TourFiltersResult } from '../tour-filters-result';
 
@@ -33,11 +36,35 @@ export function TourListView() {
   const openFilters = useBoolean();
 
   const [sortBy, setSortBy] = useState('latest');
+  const [tours, setTours] = useState<TourItem[]>([]);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(0);
+  const [search, setSearch] = useState('');
 
-  const search = useSetState<{
-    query: string;
-    results: ITourItem[];
-  }>({ query: '', results: [] });
+  const searchDebounced = useDebounce(search, 100);
+
+  useEffect(() => {
+    axiosInstance
+      .get('/api/tours', {
+        params: {
+          page,
+          limit: 6,
+          search: searchDebounced,
+        },
+      })
+      .then((response) => {
+        const { data } = response;
+
+        setTotalPage(data.totalPages);
+
+        if (data) {
+          setTours(data.data);
+        }
+      })
+      .catch((error) => {
+        toast.error('Error fetching tour guides:', error);
+      });
+  }, [page, searchDebounced, totalPage]);
 
   const filters = useSetState<ITourFilters>({
     destination: [],
@@ -48,7 +75,7 @@ export function TourListView() {
   });
 
   const dateError = fIsAfter(filters.state.startDate, filters.state.endDate);
-  console.log(_tours);
+
   const dataFiltered = applyFilter({
     inputData: _tours,
     filters: filters.state,
@@ -68,21 +95,6 @@ export function TourListView() {
     setSortBy(newValue);
   }, []);
 
-  const handleSearch = useCallback(
-    (inputValue: string) => {
-      search.setState({ query: inputValue });
-
-      if (inputValue) {
-        const results = _tours.filter(
-          (tour) => tour.name.toLowerCase().indexOf(search.state.query.toLowerCase()) !== -1
-        );
-
-        search.setState({ results });
-      }
-    },
-    [search]
-  );
-
   const renderFilters = (
     <Stack
       spacing={3}
@@ -90,7 +102,18 @@ export function TourListView() {
       alignItems={{ xs: 'flex-end', sm: 'center' }}
       direction={{ xs: 'column', sm: 'row' }}
     >
-      <TourSearch search={search} onSearch={handleSearch} />
+      <TextField
+        placeholder="Search..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Iconify icon="eva:search-fill" sx={{ ml: 1, color: 'text.disabled' }} />
+            </InputAdornment>
+          ),
+        }}
+      />
 
       <Stack direction="row" spacing={1} flexShrink={0}>
         <TourFilters
@@ -143,7 +166,7 @@ export function TourListView() {
 
       {notFound && <EmptyContent filled sx={{ py: 10 }} />}
 
-      <TourList tours={dataFiltered} />
+      <TourList tours={tours} totalPage={totalPage} setPage={setPage} />
     </DashboardContent>
   );
 }

@@ -1,4 +1,4 @@
-import type { ITourItem } from 'src/types/tour';
+import type { TourItem as TourItemInterface } from 'src/types/tour';
 
 import { useCallback } from 'react';
 
@@ -13,10 +13,12 @@ import { TourItem } from './tour-item';
 // ----------------------------------------------------------------------
 
 type Props = {
-  tours: ITourItem[];
+  tours: TourItemInterface[];
+  totalPage: number;
+  setPage: (page: number) => void;
 };
 
-export function TourList({ tours }: Props) {
+export function TourList({ tours, totalPage, setPage }: Props) {
   const router = useRouter();
 
   const handleView = useCallback(
@@ -46,24 +48,25 @@ export function TourList({ tours }: Props) {
       >
         {tours.map((tour) => (
           <TourItem
-            key={tour.id}
+            key={tour._id}
             tour={tour}
-            onView={() => handleView(tour.id)}
-            onEdit={() => handleEdit(tour.id)}
-            onDelete={() => handleDelete(tour.id)}
+            onView={() => handleView(tour._id)}
+            onEdit={() => handleEdit(tour._id)}
+            onDelete={() => handleDelete(tour._id)}
           />
         ))}
       </Box>
 
-      {tours.length > 8 && (
-        <Pagination
-          count={8}
-          sx={{
-            mt: { xs: 5, md: 8 },
-            [`& .${paginationClasses.ul}`]: { justifyContent: 'center' },
-          }}
-        />
-      )}
+      <Pagination
+        count={totalPage}
+        onChange={(_e, page) => {
+          setPage(page);
+        }}
+        sx={{
+          mt: { xs: 5, md: 8 },
+          [`& .${paginationClasses.ul}`]: { justifyContent: 'center' },
+        }}
+      />
     </>
   );
 }

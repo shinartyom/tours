@@ -5,16 +5,15 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useState, useEffect, useCallback } from 'react';
 
+import { Box } from '@mui/material';
 import Chip from '@mui/material/Chip';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
-import Switch from '@mui/material/Switch';
 import Divider from '@mui/material/Divider';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
-import FormControlLabel from '@mui/material/FormControlLabel';
 
 import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
@@ -57,6 +56,11 @@ export const NewTourSchema = zod
     }),
     services: zod.string().array().min(2, { message: 'Must have at least 2 items!' }),
     tags: zod.string().array().min(2, { message: 'Must have at least 2 items!' }),
+    rating: zod
+      .number()
+      .min(0, { message: 'Rating must be between 0 and 5!' })
+      .max(5, { message: 'Rating must be between 0 and 5!' }),
+    publish: zod.boolean().default(true),
   })
   .refine((data) => !fIsAfter(data.available.startDate, data.available.endDate), {
     message: 'End date cannot be earlier than start date!',
@@ -196,6 +200,21 @@ export function TourNewEditForm({ currentTour }: Props) {
       <Divider />
 
       <Stack spacing={3} sx={{ p: 3 }}>
+        <Stack direction={{ xs: 'column', md: 'row' }} alignItems="center" spacing={2}>
+          <Stack spacing={1.5} sx={{ flexGrow: 1 }}>
+            <Typography variant="subtitle2">Rating</Typography>
+            <Field.Rating name="rating" precision={0.1} />
+          </Stack>
+          <Stack spacing={1.5} sx={{ flexGrow: 1 }}>
+            <Typography variant="subtitle2">Price</Typography>
+            <Field.Text type="number" name="price" />
+          </Stack>
+          <Stack spacing={1.5} sx={{ flexGrow: 1 }}>
+            <Typography variant="subtitle2">Sale price</Typography>
+            <Field.Text type="number" name="salePrice" />
+          </Stack>
+        </Stack>
+
         <div>
           <Typography variant="subtitle2" sx={{ mb: 1.5 }}>
             Tour guide
@@ -303,11 +322,9 @@ export function TourNewEditForm({ currentTour }: Props) {
 
   const renderActions = (
     <Stack direction="row" alignItems="center" flexWrap="wrap">
-      <FormControlLabel
-        control={<Switch defaultChecked inputProps={{ id: 'publish-switch' }} />}
-        label="Publish"
-        sx={{ flexGrow: 1, pl: 3 }}
-      />
+      <Field.Switch name="publish" label="Publish" defaultChecked sx={{ pl: 3 }} />
+
+      <Box sx={{ flexGrow: 1 }} />
 
       <LoadingButton
         type="submit"
