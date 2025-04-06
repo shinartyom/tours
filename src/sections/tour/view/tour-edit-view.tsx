@@ -1,4 +1,4 @@
-import type { ITourItem } from 'src/types/tour';
+import type { TourItem } from 'src/types/tour';
 
 import { paths } from 'src/routes/paths';
 
@@ -11,7 +11,7 @@ import { TourNewEditForm } from '../tour-new-edit-form';
 // ----------------------------------------------------------------------
 
 type Props = {
-  tour?: ITourItem;
+  tour?: TourItem;
 };
 
 export function TourEditView({ tour }: Props) {

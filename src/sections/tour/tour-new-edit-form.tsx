@@ -1,4 +1,4 @@
-import type { ITourItem, TourGuide } from 'src/types/tour';
+import type { TourItem, TourGuide } from 'src/types/tour';
 
 import { z as zod } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -15,7 +15,6 @@ import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { paths } from 'src/routes/paths';
 import { useRouter } from 'src/routes/hooks';
 
 import axiosInstance from 'src/utils/axios';
@@ -39,7 +38,7 @@ export const NewTourSchema = zod
     tourGuides: zod
       .array(
         zod.object({
-          id: zod.string(),
+          _id: zod.string(),
           name: zod.string(),
           avatarUrl: zod.string(),
           phoneNumber: zod.string(),
@@ -61,6 +60,8 @@ export const NewTourSchema = zod
       .min(0, { message: 'Rating must be between 0 and 5!' })
       .max(5, { message: 'Rating must be between 0 and 5!' }),
     publish: zod.boolean().default(true),
+    price: zod.number().min(0, { message: 'Price must be greater than 0!' }),
+    salePrice: zod.number().min(0, { message: 'Sale price must be greater than 0!' }).optional(),
   })
   .refine((data) => !fIsAfter(data.available.startDate, data.available.endDate), {
     message: 'End date cannot be earlier than start date!',
@@ -70,12 +71,11 @@ export const NewTourSchema = zod
 // ----------------------------------------------------------------------
 
 type Props = {
-  currentTour?: ITourItem;
+  currentTour?: TourItem;
 };
 
 export function TourNewEditForm({ currentTour }: Props) {
   const router = useRouter();
-
   const [tourGuides, setTourGuides] = useState<TourGuide[]>([]);
 
   useEffect(() => {
@@ -96,7 +96,10 @@ export function TourNewEditForm({ currentTour }: Props) {
     () => ({
       name: currentTour?.name || '',
       content: currentTour?.content || '',
-      images: currentTour?.images || [],
+      images:
+        currentTour?.images?.map((img) =>
+          img.startsWith('http') ? img : `${CONFIG.serverUrl}/api${img}`
+        ) || [],
       tourGuides: currentTour?.tourGuides || [],
       available: {
         startDate: currentTour?.available.startDate || null,
@@ -125,24 +128,78 @@ export function TourNewEditForm({ currentTour }: Props) {
   } = methods;
 
   const values = watch();
-
+  console.log('values', values);
   useEffect(() => {
     if (currentTour) {
       reset(defaultValues);
     }
   }, [currentTour, defaultValues, reset]);
 
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      toast.success(currentTour ? 'Update success!' : 'Create success!');
-      router.push(paths.tour.root);
-      console.info('DATA', data);
-    } catch (error) {
-      console.error(error);
-    }
-  });
+  const onSubmit = handleSubmit(
+    async (data) => {
+      const formData = new FormData();
+
+      formData.append('name', data.name);
+      formData.append('content', data.content);
+      formData.append('durations', data.durations);
+      formData.append('destination', data.destination || '');
+
+      formData.append('price', String(data.price));
+      if (data.salePrice) {
+        formData.append('salePrice', String(data.salePrice));
+      }
+
+      formData.append('publish', String(data.publish || false));
+      formData.append('rating', String(data.rating || 0));
+
+      formData.append(
+        'available[startDate]',
+        data.available.startDate ? new Date(data.available.startDate).toISOString() : ''
+      );
+      formData.append(
+        'available[endDate]',
+        data.available.endDate ? new Date(data.available.endDate).toISOString() : ''
+      );
+
+      data.services.forEach((service) => formData.append('services[]', service));
+      data.tags.forEach((tag) => formData.append('tags[]', tag));
+
+      data.tourGuides.forEach((guide, index) => {
+        formData.append(`tourGuides[${index}][id]`, guide._id);
+        formData.append(`tourGuides[${index}][name]`, guide.name);
+        formData.append(`tourGuides[${index}][avatarUrl]`, guide.avatarUrl);
+        formData.append(`tourGuides[${index}][phoneNumber]`, guide.phoneNumber);
+      });
+
+      data.images.forEach((file) => {
+        if (typeof file === 'string') {
+          formData.append('existingImages[]', file); // mark for server to keep
+        } else {
+          formData.append('images', file); // new uploaded file
+        }
+      });
+
+      try {
+        if (currentTour) {
+          await axiosInstance.put(`/api/tours/${currentTour._id}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
+          toast.success('Update tour successfully!');
+        } else {
+          await axiosInstance.post('/api/tours', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
+          toast.success('Create tour successfully!');
+        }
+
+        reset();
+        router.push('/tour');
+      } catch (error) {
+        toast.error(error.response?.data?.message || 'Something went wrong');
+      }
+    },
+    (e) => console.error(e)
+  );
 
   const handleRemoveFile = useCallback(
     (inputFile: File | string) => {

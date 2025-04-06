@@ -25,6 +25,8 @@ import { Iconify } from 'src/components/iconify';
 import { EmptyContent } from 'src/components/empty-content';
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
+import { useAuthContext } from 'src/auth/hooks';
+
 import { TourList } from '../tour-list';
 import { TourSort } from '../tour-sort';
 import { TourFilters } from '../tour-filters';
@@ -34,6 +36,8 @@ import { TourFiltersResult } from '../tour-filters-result';
 
 export function TourListView() {
   const openFilters = useBoolean();
+  const auth = useAuthContext();
+  const isAdmin = auth.user?.role === 'admin';
 
   const [sortBy, setSortBy] = useState('latest');
   const [tours, setTours] = useState<TourItem[]>([]);
@@ -146,14 +150,16 @@ export function TourListView() {
           { name: 'List' },
         ]}
         action={
-          <Button
-            component={RouterLink}
-            href={paths.tour.new}
-            variant="contained"
-            startIcon={<Iconify icon="mingcute:add-line" />}
-          >
-            New Tour
-          </Button>
+          isAdmin ? (
+            <Button
+              component={RouterLink}
+              href={paths.tour.new}
+              variant="contained"
+              startIcon={<Iconify icon="mingcute:add-line" />}
+            >
+              New Tour
+            </Button>
+          ) : null
         }
         sx={{ mb: { xs: 3, md: 5 } }}
       />

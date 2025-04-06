@@ -130,15 +130,9 @@ export const navData = [
       //       ],
       //     },
       {
-        title: 'Tour',
+        title: 'Tour list',
         path: paths.tour.root,
         icon: ICONS.tour,
-        children: [
-          { title: 'List', path: paths.tour.root },
-          { title: 'Details', path: paths.tour.demo.details },
-          { title: 'Create', path: paths.tour.new },
-          { title: 'Edit', path: paths.tour.demo.edit },
-        ],
       },
       //     { title: 'File manager', path: paths.dashboard.fileManager, icon: ICONS.folder },
       //     {

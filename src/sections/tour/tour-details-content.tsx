@@ -1,11 +1,8 @@
 import type { TourItem } from 'src/types/tour';
 
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Divider from '@mui/material/Divider';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 
@@ -90,18 +87,6 @@ export function TourDetailsContent({ tour }: Props) {
         <Typography variant="h4" sx={{ flexGrow: 1 }}>
           {tour?.name}
         </Typography>
-
-        <IconButton>
-          <Iconify icon="solar:share-bold" />
-        </IconButton>
-
-        <Checkbox
-          defaultChecked
-          color="error"
-          icon={<Iconify icon="solar:heart-outline" />}
-          checkedIcon={<Iconify icon="solar:heart-bold" />}
-          inputProps={{ id: 'favorite-checkbox', 'aria-label': 'Favorite checkbox' }}
-        />
       </Stack>
 
       <Stack spacing={3} direction="row" flexWrap="wrap" alignItems="center">
@@ -110,7 +95,6 @@ export function TourDetailsContent({ tour }: Props) {
           <Box component="span" sx={{ typography: 'subtitle2' }}>
             {tour?.rating}
           </Box>
-          <Link sx={{ color: 'text.secondary' }}>(234 reviews)</Link>
         </Stack>
 
         <Stack direction="row" alignItems="center" spacing={0.5} sx={{ typography: 'body2' }}>
