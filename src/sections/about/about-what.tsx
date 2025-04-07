@@ -21,8 +21,8 @@ import { varFade, MotionViewport } from 'src/components/animate';
 // ----------------------------------------------------------------------
 
 export const SKILLS = [...Array(3)].map((_, index) => ({
-  label: ['Development', 'Design', 'Marketing'][index],
-  value: [20, 40, 60][index],
+  label: ['Customer Satisfaction', 'Destination Expertise', 'Seamless Planning'][index],
+  value: [90, 85, 95][index],
 }));
 
 // ----------------------------------------------------------------------
@@ -34,6 +34,7 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
         component={MotionViewport}
         sx={{
           py: { xs: 10, md: 15 },
+          pb: { xs: 0, md: 0 },
           textAlign: { xs: 'center', md: 'unset' },
         }}
       >
@@ -52,8 +53,8 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
             <Grid xs={6}>
               <m.div variants={varFade().inUp}>
                 <Image
-                  alt="Our office small"
-                  src={`${CONFIG.assetsDir}/assets/images/about/what-small.webp`}
+                  alt="Travel Experience"
+                  src={`${CONFIG.assetsDir}assets/images/mock/travel/travel-16.webp`}
                   ratio="1/1"
                   sx={(theme) => ({
                     borderRadius: 3,
@@ -69,8 +70,8 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
             <Grid xs={6}>
               <m.div variants={varFade().inUp}>
                 <Image
-                  alt="Our office large"
-                  src={`${CONFIG.assetsDir}/assets/images/about/what-large.webp`}
+                  alt="Global Destinations"
+                  src={`${CONFIG.assetsDir}assets/images/mock/travel/travel-15.webp`}
                   ratio="3/4"
                   sx={(theme) => ({
                     borderRadius: 3,
@@ -87,7 +88,7 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
           <Grid xs={12} md={6} lg={5}>
             <m.div variants={varFade().inRight}>
               <Typography variant="h2" sx={{ mb: 3 }}>
-                What is Minimal?
+                Why Choose Tours.uz?
               </Typography>
             </m.div>
 
@@ -95,10 +96,9 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
               <Typography
                 sx={{ color: 'text.secondary', [stylesMode.dark]: { color: 'common.white' } }}
               >
-                Our theme is the most advanced and user-friendly theme you will find on the market,
-                we have documentation and video to help set your site really easily, pre-installed
-                demos you can import in one click and everything from the theme options to page
-                content can be edited from the front-end. This is the theme you are looking for.
+                At Tours.uz, we specialize in creating unforgettable international travel
+                experiences. With our deep knowledge of global destinations, seamless planning, and
+                commitment to customer satisfaction, we ensure every journey is extraordinary.
               </Typography>
             </m.div>
 
@@ -132,7 +132,7 @@ export function AboutWhat({ sx, ...other }: BoxProps) {
                 size="large"
                 endIcon={<Iconify icon="eva:arrow-ios-forward-fill" />}
               >
-                Our work
+                Explore Our Tours
               </Button>
             </m.div>
           </Grid>

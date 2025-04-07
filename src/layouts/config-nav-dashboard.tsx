@@ -240,9 +240,19 @@ export const navData = [
       //     },
       //     { title: 'Blank', path: paths.dashboard.blank, icon: ICONS.blank },
       {
+        title: 'About Us',
+        path: '/about-us',
+        icon: ICONS.booking,
+      },
+      {
         title: 'Contact Us',
         path: '/contact-us',
         icon: ICONS.chat,
+      },
+      {
+        title: 'Frequently Asked Questions',
+        path: '/faqs',
+        icon: ICONS.blog,
       },
     ],
   },

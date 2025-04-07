@@ -28,23 +28,24 @@ export function AboutTeam({ sx, ...other }: BoxProps) {
 
   return (
     <Box component="section" sx={{ overflow: 'hidden', ...sx }} {...other}>
-      <Container component={MotionViewport} sx={{ textAlign: 'center', py: { xs: 10, md: 15 } }}>
+      <Container component={MotionViewport} sx={{ textAlign: 'center', py: { xs: 10 } }}>
         <m.div variants={varFade().inDown}>
           <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-            Dream team
+            Meet Our Team
           </Typography>
         </m.div>
 
         <m.div variants={varFade().inUp}>
           <Typography variant="h2" sx={{ my: 3 }}>
-            Great team is the key
+            Experts in Global Travel
           </Typography>
         </m.div>
 
         <m.div variants={varFade().inUp}>
           <Typography sx={{ mx: 'auto', maxWidth: 640, color: 'text.secondary' }}>
-            Minimal will provide you support if you have any problems, our support team will reply
-            within a day and we also have detailed documentation.
+            Our dedicated team of travel experts is here to help you explore the world. From
+            planning your dream vacation to ensuring a seamless experience, we are committed to
+            making your journey unforgettable.
           </Typography>
         </m.div>
 
@@ -72,7 +73,7 @@ export function AboutTeam({ sx, ...other }: BoxProps) {
           endIcon={<Iconify icon="eva:arrow-ios-forward-fill" width={24} />}
           sx={{ mx: 'auto' }}
         >
-          All members
+          Meet All Members
         </Button>
       </Container>
     </Box>

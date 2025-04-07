@@ -23,7 +23,7 @@ export function AboutHero({ sx, ...other }: BoxProps) {
         position: 'relative',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundImage: `url(${CONFIG.assetsDir}/assets/background/overlay.svg), url(${CONFIG.assetsDir}/assets/images/about/hero.webp)`,
+        backgroundImage: `url(${CONFIG.assetsDir}/assets/background/overlay.svg), url(${CONFIG.assetsDir}/assets/images/mock/travel/travel-14.webp)`,
         ...sx,
       }}
       {...other}
@@ -39,7 +39,7 @@ export function AboutHero({ sx, ...other }: BoxProps) {
           <AnimateText
             component="h1"
             variant="h1"
-            text={['Who', 'we are?']}
+            text={['Discover', 'World']}
             variants={varFade({ distance: 24 }).inRight}
             sx={{
               color: 'common.white',
@@ -54,8 +54,8 @@ export function AboutHero({ sx, ...other }: BoxProps) {
               variant="h4"
               sx={{ mt: 3, color: 'common.white', fontWeight: 'fontWeightSemiBold' }}
             >
-              Let&apos;s work together and
-              <br /> make awesome site easily
+              Explore the beauty, culture, and history of any part of world.
+              <br /> Your adventure starts here.
             </Typography>
           </m.div>
         </Box>

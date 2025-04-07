@@ -8,8 +8,6 @@ import { SplashScreen } from 'src/components/loading-screen';
 
 // ----------------------------------------------------------------------
 
-const FaqsPage = lazy(() => import('src/pages/faqs'));
-const AboutPage = lazy(() => import('src/pages/about-us'));
 const PricingPage = lazy(() => import('src/pages/pricing'));
 const PaymentPage = lazy(() => import('src/pages/payment'));
 const ComingSoonPage = lazy(() => import('src/pages/coming-soon'));
@@ -45,14 +43,6 @@ export const mainRoutes = [
           </MainLayout>
         ),
         children: [
-          {
-            path: 'about-us',
-            element: <AboutPage />,
-          },
-          {
-            path: 'faqs',
-            element: <FaqsPage />,
-          },
           {
             path: 'blank',
             element: <BlankPage />,
