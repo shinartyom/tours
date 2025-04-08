@@ -8,8 +8,6 @@ import { SplashScreen } from 'src/components/loading-screen';
 import { authRoutes } from './auth';
 import { mainRoutes } from './main';
 import { tourRoutes } from './tour';
-import { dashboardRoutes } from './dashboard';
-import { componentsRoutes } from './components';
 
 // ----------------------------------------------------------------------
 
@@ -36,14 +34,8 @@ export function Router() {
     // Tour
     ...tourRoutes,
 
-    // Dashboard
-    ...dashboardRoutes,
-
     // Main
     ...mainRoutes,
-
-    // Components
-    ...componentsRoutes,
 
     // No match
     { path: '*', element: <Navigate to="/404" replace /> },
