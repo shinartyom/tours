@@ -1,15 +1,15 @@
+# 🚀 Built with [Minimals Template](https://minimals.cc)
+
+> This frontend project is based on the amazing [Minimals Template](https://minimals.cc), a clean and modern UI kit built with MUI, React, and more.  
+> If you want a head start on elegant and scalable UIs, go check them out!
+
+---
+
 ## Prerequisites
 
 - Node.js 20.x (Recommended)
 
 ## Installation
-
-**Using Yarn (Recommended)**
-
-```sh
-yarn install
-yarn dev
-```
 
 **Using Npm**
 
@@ -21,8 +21,6 @@ npm run dev
 ## Build
 
 ```sh
-yarn build
-# or
 npm run build
 ```
 
