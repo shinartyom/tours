@@ -8,11 +8,13 @@ import { iconButtonClasses } from '@mui/material/IconButton';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
+import { _contacts } from 'src/_mock';
 import { allLangs } from 'src/locales';
-import { _contacts, _notifications } from 'src/_mock';
 
 import { Logo } from 'src/components/logo';
 import { useSettingsContext } from 'src/components/settings';
+
+import { useAuthContext } from 'src/auth/hooks';
 
 import { Main } from './main';
 import { NavMobile } from './nav-mobile';
@@ -47,6 +49,8 @@ export type DashboardLayoutProps = {
 
 export function DashboardLayout({ sx, children, header, data }: DashboardLayoutProps) {
   const theme = useTheme();
+  const auth = useAuthContext();
+  const isAdmin = auth.user?.role === 'admin';
 
   const mobileNavOpen = useBoolean();
 
@@ -152,7 +156,7 @@ export function DashboardLayout({ sx, children, header, data }: DashboardLayoutP
                 {/* -- Language popover -- */}
                 <LanguagePopover data={allLangs} />
                 {/* -- Notifications popover -- */}
-                <NotificationsDrawer data={_notifications} />
+                {isAdmin && <NotificationsDrawer />}
                 {/* -- Contacts popover -- */}
                 <ContactsPopover data={_contacts} />
                 {/* -- Settings button -- */}

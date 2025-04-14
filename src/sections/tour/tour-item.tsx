@@ -21,6 +21,8 @@ import { Image } from 'src/components/image';
 import { Iconify } from 'src/components/iconify';
 import { usePopover, CustomPopover } from 'src/components/custom-popover';
 
+import { useAuthContext } from 'src/auth/hooks';
+
 // ----------------------------------------------------------------------
 
 type Props = {
@@ -32,6 +34,8 @@ type Props = {
 
 export function TourItem({ tour, onView, onEdit, onDelete }: Props) {
   const popover = usePopover();
+  const auth = useAuthContext();
+  const isAdmin = auth.user?.role === 'admin';
 
   const renderRating = (
     <Stack
@@ -131,9 +135,11 @@ export function TourItem({ tour, onView, onEdit, onDelete }: Props) {
       spacing={1.5}
       sx={{ position: 'relative', p: (theme) => theme.spacing(0, 2.5, 2.5, 2.5) }}
     >
-      <IconButton onClick={popover.onOpen} sx={{ position: 'absolute', bottom: 20, right: 8 }}>
-        <Iconify icon="eva:more-vertical-fill" />
-      </IconButton>
+      {isAdmin ?? (
+        <IconButton onClick={popover.onOpen} sx={{ position: 'absolute', bottom: 20, right: 8 }}>
+          <Iconify icon="eva:more-vertical-fill" />
+        </IconButton>
+      )}
 
       {[
         {

@@ -1,14 +1,13 @@
 import type { IconButtonProps } from '@mui/material/IconButton';
 
+import { toast } from 'sonner';
 import { m } from 'framer-motion';
-import { useState, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
-import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Badge from '@mui/material/Badge';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import SvgIcon from '@mui/material/SvgIcon';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
@@ -16,46 +15,47 @@ import IconButton from '@mui/material/IconButton';
 
 import { useBoolean } from 'src/hooks/use-boolean';
 
-import { Label } from 'src/components/label';
+import axiosInstance from 'src/utils/axios';
+
 import { Iconify } from 'src/components/iconify';
 import { varHover } from 'src/components/animate';
 import { Scrollbar } from 'src/components/scrollbar';
-import { CustomTabs } from 'src/components/custom-tabs';
 
 import { NotificationItem } from './notification-item';
 
-import type { NotificationItemProps } from './notification-item';
-
 // ----------------------------------------------------------------------
 
-const TABS = [
-  { value: 'all', label: 'All', count: 22 },
-  { value: 'unread', label: 'Unread', count: 12 },
-  { value: 'archived', label: 'Archived', count: 10 },
-];
-
-// ----------------------------------------------------------------------
+export interface Notifications {
+  _id: string;
+  name: string;
+  email: string;
+  phoneNumber: string;
+  subject: string;
+  message: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
 
 export type NotificationsDrawerProps = IconButtonProps & {
-  data?: NotificationItemProps[];
+  data?: Notifications[];
 };
 
-export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDrawerProps) {
+export function NotificationsDrawer({ sx, ...other }: NotificationsDrawerProps) {
   const drawer = useBoolean();
 
-  const [currentTab, setCurrentTab] = useState('all');
+  const [notifications, setNotifications] = useState<Notifications[]>([]);
 
-  const handleChangeTab = useCallback((event: React.SyntheticEvent, newValue: string) => {
-    setCurrentTab(newValue);
+  useEffect(() => {
+    axiosInstance
+      .get('/api/contact')
+      .then((response) => {
+        setNotifications(response.data);
+      })
+      .catch((error) => {
+        toast.error('Error fetching tour guides:', error);
+      });
   }, []);
-
-  const [notifications, setNotifications] = useState(data);
-
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
-
-  const handleMarkAllAsRead = () => {
-    setNotifications(notifications.map((notification) => ({ ...notification, isUnRead: false })));
-  };
 
   const renderHead = (
     <Stack direction="row" alignItems="center" sx={{ py: 2, pl: 2.5, pr: 1, minHeight: 68 }}>
@@ -63,13 +63,11 @@ export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDr
         Notifications
       </Typography>
 
-      {!!totalUnRead && (
-        <Tooltip title="Mark all as read">
-          <IconButton color="primary" onClick={handleMarkAllAsRead}>
-            <Iconify icon="eva:done-all-fill" />
-          </IconButton>
-        </Tooltip>
-      )}
+      <Tooltip title="Mark all as read">
+        <IconButton color="primary">
+          <Iconify icon="eva:done-all-fill" />
+        </IconButton>
+      </Tooltip>
 
       <IconButton onClick={drawer.onFalse} sx={{ display: { xs: 'inline-flex', sm: 'none' } }}>
         <Iconify icon="mingcute:close-line" />
@@ -81,36 +79,11 @@ export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDr
     </Stack>
   );
 
-  const renderTabs = (
-    <CustomTabs variant="fullWidth" value={currentTab} onChange={handleChangeTab}>
-      {TABS.map((tab) => (
-        <Tab
-          key={tab.value}
-          iconPosition="end"
-          value={tab.value}
-          label={tab.label}
-          icon={
-            <Label
-              variant={((tab.value === 'all' || tab.value === currentTab) && 'filled') || 'soft'}
-              color={
-                (tab.value === 'unread' && 'info') ||
-                (tab.value === 'archived' && 'success') ||
-                'default'
-              }
-            >
-              {tab.count}
-            </Label>
-          }
-        />
-      ))}
-    </CustomTabs>
-  );
-
   const renderList = (
     <Scrollbar>
       <Box component="ul">
         {notifications?.map((notification) => (
-          <Box component="li" key={notification.id} sx={{ display: 'flex' }}>
+          <Box component="li" key={notification._id} sx={{ display: 'flex' }}>
             <NotificationItem notification={notification} />
           </Box>
         ))}
@@ -129,7 +102,7 @@ export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDr
         sx={sx}
         {...other}
       >
-        <Badge badgeContent={totalUnRead} color="error">
+        <Badge badgeContent={notifications.length} color="error">
           <SvgIcon>
             {/* https://icon-sets.iconify.design/solar/bell-bing-bold-duotone/ */}
             <path
@@ -154,15 +127,7 @@ export function NotificationsDrawer({ data = [], sx, ...other }: NotificationsDr
       >
         {renderHead}
 
-        {renderTabs}
-
         {renderList}
-
-        <Box sx={{ p: 1 }}>
-          <Button fullWidth size="large">
-            View all
-          </Button>
-        </Box>
       </Drawer>
     </>
   );

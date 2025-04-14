@@ -1,14 +1,29 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import { paths } from 'src/routes/paths';
 
 import { DashboardContent } from 'src/layouts/dashboard';
 
 import { CustomBreadcrumbs } from 'src/components/custom-breadcrumbs';
 
+import { useAuthContext } from 'src/auth/hooks';
+
 import { TourNewEditForm } from '../tour-new-edit-form';
 
 // ----------------------------------------------------------------------
 
 export function TourCreateView() {
+  const auth = useAuthContext();
+  const isAdmin = auth.user?.role === 'admin';
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate(paths.tour.root);
+    }
+  }, [isAdmin, navigate]);
+
   return (
     <DashboardContent>
       <CustomBreadcrumbs
