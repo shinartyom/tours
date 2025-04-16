@@ -135,7 +135,7 @@ export function TourItem({ tour, onView, onEdit, onDelete }: Props) {
       spacing={1.5}
       sx={{ position: 'relative', p: (theme) => theme.spacing(0, 2.5, 2.5, 2.5) }}
     >
-      {isAdmin ?? (
+      {isAdmin && (
         <IconButton onClick={popover.onOpen} sx={{ position: 'absolute', bottom: 20, right: 8 }}>
           <Iconify icon="eva:more-vertical-fill" />
         </IconButton>
